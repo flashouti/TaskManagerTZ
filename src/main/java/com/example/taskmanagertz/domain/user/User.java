@@ -8,10 +8,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 @Entity
 @Table(name = "user_info")
@@ -26,11 +23,10 @@ public class User implements UserDetails {
     private Long id;
 
     @Column(unique = true, nullable = false)
-    private final String username;
+    private final String email;
 
     @Column(nullable = false)
     private final  String password;
-
 
     @OneToMany(mappedBy = "author",cascade = CascadeType.REMOVE, orphanRemoval = true, fetch = FetchType.EAGER)
     private final List<Task> createdTasks = new ArrayList<>();
@@ -42,11 +38,20 @@ public class User implements UserDetails {
     @Enumerated(EnumType.STRING)
     private final UserRole role;
 
+    @Override
+    public String getPassword() {
+        return password;
+    }
+
+    @Override
+    public String getUsername() {
+        return email;
+    }
 
     @Transient
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of(new SimpleGrantedAuthority(role.name()));
+        return Collections.singletonList(new SimpleGrantedAuthority(role.name()));
     }
     @Transient
     @Override
