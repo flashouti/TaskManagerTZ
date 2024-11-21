@@ -1,12 +1,18 @@
+jwt:
+  secret: 984hg493gh0439rthr0429uruj2309yh937gc763fe87t3f89723gf
+  lifetime: 10m
 spring:
   jpa:
     open-in-view: false
     show-sql: true
     hibernate:
       ddl-auto: update
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
 
   datasource:
-    url: jdbc:postgresql://${DB_HOST}:${DB_PORT:5432}/${DB_NAME:taskManager}
-    username: ${DB_USERNAME}
-    password: ${DB_PASSWORD}
+    url: jdbc:postgresql://localhost:5432/taskManager
+    username: postgres
+    password: Yessirskiii666
     driver-class-name: org.postgresql.Driver
+
+
