@@ -1,5 +1,6 @@
 package com.example.taskmanagertz.config;
 
+import com.example.taskmanagertz.domain.user.UserRole;
 import com.example.taskmanagertz.services.UserService;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -36,30 +37,6 @@ public class SecurityConfig {
     UserService userService;
     JwtFilter jwtFilter;
 
-    public static String[] PERMITTED_URI = {
-            "/trainerslog/api/v1/public/**",
-            "/trainerslog/api/v1/coach/getCoachesInFilial",
-            "/trainerslog/api/v1/filial/getAll",
-            "/trainerslog/api/v1/user/getCurrent",
-    };
-
-
-    public static String[] ADMIN_URI = {
-
-    };
-
-    public static String[] STUDENT_COACH_COMMON = {
-
-    };
-
-    public static String[] STUDENT_URI = {
-
-    };
-
-    public static String[] COACH_URI = {
-
-    };
-
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
         httpSecurity
@@ -69,8 +46,11 @@ public class SecurityConfig {
                 .logout(AbstractHttpConfigurer::disable)
                 .requestCache(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(c -> c
-                        .requestMatchers(PERMITTED_URI)
-                        .permitAll())
+                        .requestMatchers("/taskManager/auth/**")
+                        .permitAll()
+                        .anyRequest()
+                        .hasAnyAuthority(UserRole.USER.name(), UserRole.ADMIN.name())
+                )
                 .sessionManagement(manager -> manager.sessionCreationPolicy(STATELESS))
                 .authenticationProvider(authenticationProvider())
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);

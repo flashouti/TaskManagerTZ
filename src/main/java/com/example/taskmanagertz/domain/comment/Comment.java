@@ -14,7 +14,7 @@ import lombok.NoArgsConstructor;
 @Table(name = "comment")
 public class Comment {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue
     private Long id;
 
     private String text;
@@ -25,4 +25,9 @@ public class Comment {
     @ManyToOne
     private User author;
 
+    public Comment(String text, Task task, User author) {
+        this.text = text;
+        this.task = task;
+        this.author = author;
+    }
 }

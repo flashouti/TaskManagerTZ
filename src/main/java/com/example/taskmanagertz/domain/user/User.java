@@ -18,11 +18,12 @@ import java.util.*;
 @RequiredArgsConstructor
 @AllArgsConstructor
 public class User implements UserDetails {
+
     @Id
-    @GeneratedValue
+    @GeneratedValue()
     private Long id;
 
-    @Column(unique = true, nullable = false)
+    @Column(unique = true)
     private final String email;
 
     @Column(nullable = false)

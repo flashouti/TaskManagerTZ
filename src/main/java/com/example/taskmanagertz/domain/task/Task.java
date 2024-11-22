@@ -16,7 +16,7 @@ import java.util.List;
 @Table(name = "task")
 public class Task {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue
     private Long id;
 
     private String title;
@@ -40,4 +40,14 @@ public class Task {
     @OneToMany(mappedBy = "task", cascade = CascadeType.REMOVE, fetch = FetchType.EAGER)
     private List<Comment> comments;
 
+    public Task(String title, String description, User author) {
+        this.title = title;
+        this.description = description;
+        this.status = TaskStatus.PENDING;
+        this.priority = TaskPriority.MEDIUM;
+        this.modified = LocalDateTime.now();
+        this.author = author;
+        this.assignee = null;
+        this.comments = null;
+    }
 }

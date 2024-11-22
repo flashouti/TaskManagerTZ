@@ -7,11 +7,14 @@ import com.example.taskmanagertz.utils.JwtTokenUtils;
 import com.example.taskmanagertz.web.dto.requests.auth.AuthenticationRequest;
 import com.example.taskmanagertz.web.dto.requests.auth.RegistrationRequest;
 import com.example.taskmanagertz.web.dto.responses.auth.AuthenticationResponse;
+import com.example.taskmanagertz.web.exceptions.NotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -40,9 +43,14 @@ public class AuthenticationService {
                         authenticationRequest.password()
                 )
         );
-        User user = userRepository.findByEmail(authenticationRequest.username())
-                .get();
-        String jwtToken = jwtService.generateToken(user);
+        Optional<User> user = userRepository.findByEmail(authenticationRequest.username());
+
+        String jwtToken;
+        if(user.isPresent()) {
+            jwtToken = jwtService.generateToken(user.get());
+        } else {
+            throw new NotFoundException("Invalid username or password");
+        }
         return new AuthenticationResponse (jwtToken);
     }
 
